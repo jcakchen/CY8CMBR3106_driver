@@ -166,148 +166,148 @@ configData = [
 
    
 def sendConfiguration(address, offset, count, data):
-   # This function sends the 128 bytes of configuration array to MBR3 device over #
-   # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
-   # method/function call                                                         #
+    # This function sends the 128 bytes of configuration array to MBR3 device over #
+    # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
+    # method/function call                                                         #
 
-   for i in range(offset,(offset+count),1):
-      retry = 1
-      while(retry):
-         try:
+    for i in range(offset,(offset+count),1):
+        retry = 1
+        while(retry):
+            try:
             #print i, data[i]
             bus.write_byte_data(address,i,data[i])
             retry = 0
-         except:
+        except:
             retry = retry + 1
             time.sleep(0.05)
             if(retry == 10):
-               print('ERROR: Failed to Send Configuration 10 times!! \n')
-               exit(0)
+                print('ERROR: Failed to Send Configuration 10 times!! \n')
+                exit(0)
 
 
 def applyConfig():
-   # This function sends save& check CRC command, waits for some time to allow #
-   # MBR3 device to save the 128 bytes of configuration data and then issue a  #
-   # software reset to apply the new configuration                             #
+    # This function sends save& check CRC command, waits for some time to allow #
+    # MBR3 device to save the 128 bytes of configuration data and then issue a  #
+    # software reset to apply the new configuration                             #
 
-   retry = 1
-   while(retry):
-      try:
-         bus.write_byte_data(SLAVE_ADDR,CTRL_CMD,SAVE_CHECK_CRC)
-         retry = 0
-         print ('SAVE_CHECK_CRC command sent successfully!!' )
-      except:
-         retry = retry + 1
-         if(retry == 10):
-            print('ERROR: Failed to send COMMAMD SAVE_CHECK_CRC 10 times !!')
-            sys.exit(0)
-   time.sleep(0.05)
+    retry = 1
+    while(retry):
+        try:
+            bus.write_byte_data(SLAVE_ADDR,CTRL_CMD,SAVE_CHECK_CRC)
+            retry = 0
+            print ('SAVE_CHECK_CRC command sent successfully!!' )
+        except:
+            retry = retry + 1
+            if(retry == 10):
+                print('ERROR: Failed to send COMMAMD SAVE_CHECK_CRC 10 times !!')
+                sys.exit(0)
+    time.sleep(0.05)
 
-   retry = 1
-   while(retry):
-      try:
-         bus.write_byte_data(SLAVE_ADDR,CTRL_CMD,SW_RESET)
-         retry = 0
-         print ('SW_RESET command sent successfully!!' )
-      except:
-         retry = retry + 1
-         if(retry == 10):
-            print('ERROR: Failed 10 times send COMMAMD SW_RESET!!')
-            sys.exit(0)
-   return
+    retry = 1
+    while(retry):
+        try:
+            bus.write_byte_data(SLAVE_ADDR,CTRL_CMD,SW_RESET)
+            retry = 0
+            print ('SW_RESET command sent successfully!!' )
+        except:
+            retry = retry + 1
+            if(retry == 10):
+                print('ERROR: Failed 10 times send COMMAMD SW_RESET!!')
+                sys.exit(0)
+    return
 
 
 def readStatus():
-   # This thread will run parallely and updates the gloab variable "buttonStat" #
-   # So that other threads can use this button status and trigger activities    #
+    # This thread will run parallely and updates the gloab variable "buttonStat" #
+    # So that other threads can use this button status and trigger activities    #
     global buttonStat
-   global slider1Position
-   global slider2Position
-   global stop
-   while 1:
-      retry = 1
-      while(retry):
-         try:
-            slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-            slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
-            buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-            #print(buttonStat)
-            retry = 0
+    global slider1Position
+    global slider2Position
+    global stop
+    while 1:
+        retry = 1
+        while(retry):
+            try:
+                slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
+                slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
+                buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
+                #print(buttonStat)
+                retry = 0
    
-         except KeyboardInterrupt:
+        except KeyboardInterrupt:
             print('Received Keyboard Interrupt')
             print(' Exiting the Program')
             stop = 1
             return(0)
          
-         except:
+        except:
             retry = retry + 1
             if(retry == 10):
-               print(' Failed 10 times to Read BUtton Status!!')
-               sys.exit()
+                print(' Failed 10 times to Read BUtton Status!!')
+                sys.exit()
 
             
          
 def init_MBR3():
-   a = 0
-   delay = 0.05
-   sendConfiguration(SLAVE_ADDR, REGMAP_ORIGIN,128,configData)
-   print ('Configuration Sent Sucessfully!!')
-   
-   # Provide this delay to allow the MBR device to save the 128 bytes   #
-   # of configuration sent.                                             #
-   time.sleep(1)
-   
-   applyConfig()
-   
-   #Delay after sending the Reset command to allow for MBR3 boot
-   time.sleep(0.5) 
-
-   return
+    a = 0
+    delay = 0.05
+    sendConfiguration(SLAVE_ADDR, REGMAP_ORIGIN,128,configData)
+    print ('Configuration Sent Sucessfully!!')
+    
+    # Provide this delay to allow the MBR device to save the 128 bytes   #
+    # of configuration sent.                                             #
+    time.sleep(1)
+    
+    applyConfig()
+    
+    #Delay after sending the Reset command to allow for MBR3 boot
+    time.sleep(0.5) 
+    
+    return
 
 
 def displayButtonStat():
-   try:
-      if( slider1Position <255):
+    try:
+        if( slider1Position <255):
             print(' slider1 is TOUCHED \n' )
 
-      if( slider2Position <255):
+        if( slider2Position <255):
             print(' slider2 is TOUCHED \n' )      
        
-   except KeyboardInterrupt:
-         print('Received Keyboard Interrupt')
-         print('Exiting th Program')
-         stop = 1
-         return
+    except KeyboardInterrupt:
+        print('Received Keyboard Interrupt')
+        print('Exiting th Program')
+        stop = 1
+    return
    
   
 if __name__ == "__main__":
-   global stop
-   global slider1Position
-   global slider2Position
-   global buttonStat
-   buttonStat = 0
-   slider1Position = 0
-   slider2Position = 0
-   
-   #global flag to stop the thread
-   stop = 0 
-   init_MBR3()
-      
-   try:
-      while (1):
-		slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-		print('slider1Position %d' % slider1Position)
-        slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
-		print('slider2Position %d' % slider2Position)	
-        buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-        print('buttonStat %d' % buttonStat)
-        time.sleep(0.2) 
-         
-   except KeyboardInterrupt:
-      print('Received Keyboard Interrupt')
-      print('Exiting the Program')
-      stop = 1     
-   print('EXIT')
+    global stop
+    global slider1Position
+    global slider2Position
+    global buttonStat
+    buttonStat = 0
+    slider1Position = 0
+    slider2Position = 0
+    
+    #global flag to stop the thread
+    stop = 0 
+    init_MBR3()
+        
+    try:
+        while (1):
+            slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
+            print('slider1Position %d' % slider1Position)
+            slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
+            print('slider2Position %d' % slider2Position)	
+            buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
+            print('buttonStat %d' % buttonStat)
+            time.sleep(0.2) 
+            
+    except KeyboardInterrupt:
+        print('Received Keyboard Interrupt')
+        print('Exiting the Program')
+        stop = 1     
+    print('EXIT')
       
       
