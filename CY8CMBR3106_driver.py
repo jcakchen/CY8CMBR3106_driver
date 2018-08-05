@@ -295,7 +295,7 @@ if __name__ == "__main__":
     init_MBR3()
         
     try:
-        while (1):
+        while(1):
             slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
             print('slider1Position %d' % slider1Position)
             slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
