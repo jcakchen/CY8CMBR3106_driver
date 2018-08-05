@@ -184,7 +184,6 @@ def sendConfiguration(address, offset, count, data):
                     print('ERROR: Failed to Send Configuration 10 times!! \n')
                     exit(0)
 
-
 def applyConfig():
     # This function sends save& check CRC command, waits for some time to allow #
     # MBR3 device to save the 128 bytes of configuration data and then issue a  #
