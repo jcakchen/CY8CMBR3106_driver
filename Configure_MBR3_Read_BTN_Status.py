@@ -233,17 +233,17 @@ def readStatus():
                 #print(buttonStat)
                 retry = 0
    
-        except KeyboardInterrupt:
-            print('Received Keyboard Interrupt')
-            print(' Exiting the Program')
-            stop = 1
-            return(0)
+            except KeyboardInterrupt:
+                print('Received Keyboard Interrupt')
+                print(' Exiting the Program')
+                stop = 1
+                return(0)
          
-        except:
-            retry = retry + 1
-            if(retry == 10):
-                print(' Failed 10 times to Read BUtton Status!!')
-                sys.exit()
+            except:
+                retry = retry + 1
+                if(retry == 10):
+                    print(' Failed 10 times to Read BUtton Status!!')
+                    sys.exit()
 
             
          
