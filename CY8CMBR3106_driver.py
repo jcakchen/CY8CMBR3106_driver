@@ -182,15 +182,15 @@ def sendConfiguration(address, offset, count, data):
         retry = 1
         while(retry):
             try:
-            #print i, data[i]
-            bus.write_byte_data(address,i,data[i])
-            retry = 0
-        except:
-            retry = retry + 1
-            time.sleep(0.05)
-            if(retry == 10):
-                print('ERROR: Failed to Send Configuration 10 times!! \n')
-                exit(0)
+                #print i, data[i]
+                bus.write_byte_data(address,i,data[i])
+                retry = 0
+            except:
+                retry = retry + 1
+                time.sleep(0.05)
+                if(retry == 10):
+                    print('ERROR: Failed to Send Configuration 10 times!! \n')
+                    exit(0)
 
 
 def applyConfig():
@@ -266,7 +266,7 @@ def init_MBR3():
     # of configuration sent.                                             #
     time.sleep(1)
     
-    applyConfig()
+    #applyConfig()
     
     #Delay after sending the Reset command to allow for MBR3 boot
     time.sleep(0.5) 
