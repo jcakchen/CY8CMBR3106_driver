@@ -290,7 +290,7 @@ if __name__ == "__main__":
     
     #global flag to stop the thread
     stop = 0 
-    init_MBR3()
+    #init_MBR3()
         
     try:
         while(1):
