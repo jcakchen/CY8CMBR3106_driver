@@ -302,20 +302,20 @@ if __name__ == "__main__":
     stop = 0 
     init_MBR3()
         
-    try:
-        while(1):
-            slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-            print('slider1Position %d' % slider1Position)
-            slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
-            print('slider2Position %d' % slider2Position)	
-            buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-            print('buttonStat %d' % buttonStat)
-            time.sleep(0.2) 
-            
-    except KeyboardInterrupt:
-        print('Received Keyboard Interrupt')
-        print('Exiting the Program')
-        stop = 1     
-    print('EXIT')
+    #try:
+    while(1):
+        slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
+        print('slider1Position %d' % slider1Position)
+        slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
+        print('slider2Position %d' % slider2Position)	
+        buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
+        print('buttonStat %d' % buttonStat)
+        time.sleep(0.1) 
+    #        
+    #except KeyboardInterrupt:
+    #    print('Received Keyboard Interrupt')
+    #    print('Exiting the Program')
+    #    stop = 1     
+    #print('EXIT')
       
       
