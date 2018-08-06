@@ -190,14 +190,22 @@ def displayButtonStat():
     return
 
 def on_button_pressed():
-    slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-    print('slider1Position %d' % slider1Position)
-    slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
-    print('slider2Position %d' % slider2Position)	
-    buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-    print('buttonStat %d ' % buttonStat)
-    addr = bus.read_byte_data(SLAVE_ADDR, 0x90)
-    print(addr)      
+    retry = 1
+    while(retry):
+        try:
+            slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
+            print('slider1Position %d' % slider1Position)
+            slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
+            print('slider2Position %d' % slider2Position)	
+            buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
+            print('buttonStat %d ' % buttonStat)
+            addr = bus.read_byte_data(SLAVE_ADDR, 0x90)
+            print(addr)               
+            retry = 0      
+        except:
+            retry = retry + 1
+            if(retry == 10):
+                print(' Failed 10 times to Read BUtton Status!!')     
 
 if __name__ == "__main__":
     global stop
