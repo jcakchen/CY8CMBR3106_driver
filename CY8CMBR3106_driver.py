@@ -266,7 +266,7 @@ def init_MBR3():
     # of configuration sent.                                             #
     time.sleep(1)
     
-    #applyConfig()
+    applyConfig()
     
     #Delay after sending the Reset command to allow for MBR3 boot
     time.sleep(0.5) 
@@ -300,10 +300,11 @@ if __name__ == "__main__":
     
     #global flag to stop the thread
     stop = 0 
-    init_MBR3()
+    
         
     #try:
     while(1):
+        init_MBR3()
         slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
         print('slider1Position %d' % slider1Position)
         slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
