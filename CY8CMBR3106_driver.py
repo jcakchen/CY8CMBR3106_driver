@@ -256,7 +256,7 @@ def readStatusThead():
                     print(' Failed 10 times to Read BUtton Status!!')
                     #thread.exit()
                     sys.exit()
-            time.sleep(0.02)
+        time.sleep(0.02)
             
          
 def init_MBR3():
@@ -278,13 +278,20 @@ def init_MBR3():
 
 
 def displayButtonStat():
+    global buttonStat
+    global slider1Position
+    global slider2Position
     try:
         if( slider1Position <255):
             print(' slider1 is TOUCHED \n' )
-
+            print('slider1Position %d' % slider1Position)
+                
         if( slider2Position <255):
             print(' slider2 is TOUCHED \n' )      
-       
+            print('slider2Position %d' % slider2Position)	
+        if(buttonStat > 0):
+            print(' button is TOUCHED \n' ) 
+            print('buttonStat %d' % buttonStat)
     except KeyboardInterrupt:
         print('Received Keyboard Interrupt')
         print('Exiting th Program')
@@ -309,12 +316,17 @@ if __name__ == "__main__":
         readThead=threading.Thread(target=readStatusThead)
         readThead.start()
         print('\nTouch any Button on MBR3 Kit OR Press CTRL + C to EXIT\n' )            
+    except:
+        print('Read Button status Thread did not start')       
+    try:
+        while(stop == 0):
+            time.sleep(0.05) 
+            displayButtonStat()           
     except KeyboardInterrupt:
         print('Received Keyboard Interrupt')
         print('Exiting the Program')
         stop = 1   
-    except:
-        print('Read Button status Thread did not start')   
+    
     print('EXIT')
       
       
