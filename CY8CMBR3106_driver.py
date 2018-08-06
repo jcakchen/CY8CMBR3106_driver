@@ -6,7 +6,7 @@
 import sys
 import time
 import smbus
-import thread
+import threading
 
 #------------------------------------------------------------#
 #/* CY8CMBR3116 Register Map Offset Address */               #
@@ -254,7 +254,7 @@ def readStatusThead():
                 retry = retry + 1
                 if(retry == 10):
                     print(' Failed 10 times to Read BUtton Status!!')
-                    thread.exit()
+                    #thread.exit()
                     sys.exit()
 
             
@@ -306,7 +306,8 @@ if __name__ == "__main__":
     
     init_MBR3()    
     try:
-        thread.start_new_thread(readStatusThead,())
+        readThead=threading.Thread(target=readStatusThead)
+        readThead.start()
         print('\nTouch any Button on MBR3 Kit OR Press CTRL + C to EXIT\n' )            
     except KeyboardInterrupt:
         print('Received Keyboard Interrupt')
