@@ -21,6 +21,7 @@ global stop
 global buttonStat
 global slider1Position
 global slider2Position
+global proxStat
 
 printed = 0 #global flag for status button change
 
@@ -30,9 +31,9 @@ BTN_STAT = 0xAA
 GPO_OUTPUT_STATE = 0x80
 SENSOR_ID = 0x82
 CTRL_CMD = 0x86
-BUTTON_STATUS = 0xAA
 SILIDER1_POSITION = 0xb0
 SILIDER2_POSITION = 0xb2
+PROX_STAT = 0xae
 
 #/* Below are the Command Codes used to configure MBR3*/#
 
@@ -132,6 +133,7 @@ def readStatus():
     global buttonStat
     global slider1Position
     global slider2Position
+    global proxStat
     global stop
     while 1:
         retry = 1
@@ -140,6 +142,7 @@ def readStatus():
                 slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
                 slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
                 buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
+                proxStat = bus.read_byte_data(SLAVE_ADDR, PROX_STAT)
                 #print(buttonStat)
                 retry = 0
    
@@ -199,8 +202,8 @@ def on_button_pressed():
             print('slider2Position %d' % slider2Position)	
             buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
             print('buttonStat %d ' % buttonStat)
-            addr = bus.read_byte_data(SLAVE_ADDR, 0x90)
-            print(addr)               
+            proxStat = bus.read_byte_data(SLAVE_ADDR, PROX_STAT)
+            print('proxStat %d ' % proxStat)             
             retry = 0   
             return   
         except:
@@ -233,8 +236,8 @@ if __name__ == "__main__":
                 print('slider2Position %d' % slider2Position)	
                 buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
                 print('buttonStat %d ' % buttonStat)
-                addr = bus.read_byte_data(SLAVE_ADDR, 0x90)
-                print(addr)
+                proxStat = bus.read_byte_data(SLAVE_ADDR, PROX_STAT)
+                print('proxStat %d ' % proxStat) 
                 """                
                 retry = 0
    
