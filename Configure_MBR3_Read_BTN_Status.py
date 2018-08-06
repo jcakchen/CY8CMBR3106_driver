@@ -129,7 +129,7 @@ SENSOR_ID = 0x82
 CTRL_CMD = 0x86
 BUTTON_STATUS = 0xAA
 SILIDER1_POSITION = 0xb0
-SILIDER1_POSITION = 0xb2
+SILIDER2_POSITION = 0xb2
 
 #/* Below are the Command Codes used to configure MBR3*/#
 
