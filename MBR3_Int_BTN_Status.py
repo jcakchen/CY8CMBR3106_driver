@@ -201,7 +201,8 @@ def on_button_pressed():
             print('buttonStat %d ' % buttonStat)
             addr = bus.read_byte_data(SLAVE_ADDR, 0x90)
             print(addr)               
-            retry = 0      
+            retry = 0   
+            return   
         except:
             retry = retry + 1
             if(retry == 10):
