@@ -307,14 +307,13 @@ if __name__ == "__main__":
     init_MBR3()    
     try:
         thread.start_new_thread(readStatusThead,())
-        print('\nTouch any Button on MBR3 Kit OR Press CTRL + C to EXIT\n' )
-    except:
-        print('Read Button status Thread did not start')             
+        print('\nTouch any Button on MBR3 Kit OR Press CTRL + C to EXIT\n' )            
     except KeyboardInterrupt:
         print('Received Keyboard Interrupt')
         print('Exiting the Program')
         stop = 1   
-      
+    except:
+        print('Read Button status Thread did not start')   
     print('EXIT')
       
       
