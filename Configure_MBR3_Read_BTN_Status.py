@@ -290,22 +290,29 @@ if __name__ == "__main__":
     
     #global flag to stop the thread
     stop = 0 
-    #init_MBR3()
-        
-    try:
-        while(1):
-            #slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-            print('slider1Position %d' % slider1Position)
-            #slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
-            print('slider2Position %d' % slider2Position)	
-            buttonStat = bus.read_byte_data(SLAVE_ADDR, 0x90)
-            #print('buttonStat %d' % buttonStat)
-            time.sleep(0.2) 
-            
-    except KeyboardInterrupt:
-        print('Received Keyboard Interrupt')
-        print('Exiting the Program')
-        stop = 1     
+    init_MBR3()
+    while 1:
+        retry = 1
+        time.sleep(0.2) 
+        while(retry):
+            try:
+                slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
+                print('slider1Position %d' % slider1Position)
+                slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
+                print('slider2Position %d' % slider2Position)	
+                buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
+                print('buttonStat %d ' % buttonStat)
+                retry = 0
+   
+            except KeyboardInterrupt:
+                print('Received Keyboard Interrupt')
+                print(' Exiting the Program')
+                stop = 1       
+            except:
+                retry = retry + 1
+                if(retry == 10):
+                    print(' Failed 10 times to Read BUtton Status!!')
+                    sys.exit()
     print('EXIT')
       
       
