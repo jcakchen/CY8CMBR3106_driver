@@ -237,11 +237,11 @@ def readStatusThead():
         while(retry):
             try:
                 slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-                print('slider1Position %d' % slider1Position)
+                #print('slider1Position %d' % slider1Position)
                 slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
-                print('slider2Position %d' % slider2Position)	
+                #print('slider2Position %d' % slider2Position)	
                 buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-                print('buttonStat %d' % buttonStat)
+                #print('buttonStat %d' % buttonStat)
                 retry = 0
 
             except KeyboardInterrupt:
