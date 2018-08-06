@@ -298,7 +298,7 @@ if __name__ == "__main__":
             print('slider1Position %d' % slider1Position)
             #slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
             print('slider2Position %d' % slider2Position)	
-            buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
+            buttonStat = bus.read_byte_data(SLAVE_ADDR, 0x90)
             #print('buttonStat %d' % buttonStat)
             time.sleep(0.2) 
             
