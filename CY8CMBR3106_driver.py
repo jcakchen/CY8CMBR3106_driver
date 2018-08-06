@@ -6,7 +6,7 @@
 import sys
 import time
 import smbus
-
+import thread
 
 #------------------------------------------------------------#
 #/* CY8CMBR3116 Register Map Offset Address */               #
@@ -225,7 +225,7 @@ def applyConfig():
     return
 
 
-def readStatus():
+def readStatusThead():
     # This thread will run parallely and updates the gloab variable "buttonStat" #
     # So that other threads can use this button status and trigger activities    #
     global buttonStat
@@ -237,9 +237,11 @@ def readStatus():
         while(retry):
             try:
                 slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
+                print('slider1Position %d' % slider1Position)
                 slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
+                print('slider2Position %d' % slider2Position)	
                 buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-                #print(buttonStat)
+                print('buttonStat %d' % buttonStat)
                 retry = 0
    
             except KeyboardInterrupt:
@@ -252,6 +254,7 @@ def readStatus():
                 retry = retry + 1
                 if(retry == 10):
                     print(' Failed 10 times to Read BUtton Status!!')
+                    thread.exit()
                     sys.exit()
 
             
@@ -301,22 +304,17 @@ if __name__ == "__main__":
     #global flag to stop the thread
     stop = 0 
     
-        
-    #try:
-    while(1):
-        init_MBR3()
-        slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-        print('slider1Position %d' % slider1Position)
-        slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)  
-        print('slider2Position %d' % slider2Position)	
-        buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-        print('buttonStat %d' % buttonStat)
-        time.sleep(0.1) 
-    #        
-    #except KeyboardInterrupt:
-    #    print('Received Keyboard Interrupt')
-    #    print('Exiting the Program')
-    #    stop = 1     
-    #print('EXIT')
+    init_MBR3()    
+    try:
+        thread.start_new_thread(readStatusThead,())
+        print('\nTouch any Button on MBR3 Kit OR Press CTRL + C to EXIT\n' )
+    except:
+        print('Read Button status Thread did not start')             
+    except KeyboardInterrupt:
+        print('Received Keyboard Interrupt')
+        print('Exiting the Program')
+        stop = 1   
+      
+    print('EXIT')
       
       
