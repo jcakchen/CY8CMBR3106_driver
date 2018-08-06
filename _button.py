@@ -25,7 +25,7 @@ class Button(object):
                  channel,
                  polarity=GPIO.FALLING,
                  pull_up_down=GPIO.PUD_UP,
-                 debounce_time=0.08):
+                 debounce_time=0.01):
         """A simple GPIO-based button driver.
 
         This driver supports a simple GPIO-based button. It works by detecting
