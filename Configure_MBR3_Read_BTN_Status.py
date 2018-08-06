@@ -310,6 +310,8 @@ if __name__ == "__main__":
                 print('slider2Position %d' % slider2Position)	
                 buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
                 print('buttonStat %d ' % buttonStat)
+                addr = bus.read_byte_data(SLAVE_ADDR, 0x90)
+                print(addr)                
                 retry = 0
    
             except KeyboardInterrupt:
