@@ -243,7 +243,7 @@ def readStatusThead():
                 buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
                 print('buttonStat %d' % buttonStat)
                 retry = 0
-   
+
             except KeyboardInterrupt:
                 print('Received Keyboard Interrupt')
                 print(' Exiting the Program')
@@ -256,7 +256,7 @@ def readStatusThead():
                     print(' Failed 10 times to Read BUtton Status!!')
                     #thread.exit()
                     sys.exit()
-
+            time.sleep(0.02)
             
          
 def init_MBR3():
