@@ -201,7 +201,6 @@ def applyConfig():
                 print('ERROR: Failed to send COMMAMD SAVE_CHECK_CRC 10 times !!')
                 sys.exit(0)
     time.sleep(0.05)
-    """
     retry = 1
     while(retry):
         try:
@@ -213,7 +212,6 @@ def applyConfig():
             if(retry == 10):
                 print('ERROR: Failed 10 times send COMMAMD SW_RESET!!')
                 sys.exit(0)
-    """
     return
 
 
