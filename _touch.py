@@ -166,7 +166,7 @@ class Touch(I2CDevice):
         self.gpio_interrupt_number = 0
         self.gpio_pin_int.on_press(self._gpio_int_callback)  
         while True:
-            if self.gpio_interrupt_on
+            if self.gpio_interrupt_on:
                 print("interrupt on ")
                 self.gpio_interrupt_on = False
                 if self.slider1Position < 255 or self.slider2Position < 255:
