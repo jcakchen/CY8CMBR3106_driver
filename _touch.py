@@ -6,7 +6,7 @@
 import sys
 import time
 import smbus
-from rpisensors.i2c_device import I2CDevice
+from rpi_sensors.i2c_device import I2CDevice
 from _button import Button
 
 #/* Slave Address (Default) */
