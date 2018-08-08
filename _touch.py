@@ -9,42 +9,29 @@ import smbus
 from i2c_device import I2CDevice
 from _button import Button
 
-#/* Slave Address (Default) */
-MBR3_I2CADDR = 0x37
 
-printed = 0 #global flag for status button change
+class touch(object):
+    """ touch driver with interrupt """
+    #/* Slave Address (Default) */
+    MBR3_I2CADDR = 0x37
 
-#/* Register Offsets/sub addresses */#  
-REGMAP_ORIGIN = 0x00
-BTN_STAT = 0xAA
-GPO_OUTPUT_STATE = 0x80
-SENSOR_ID = 0x82
-CTRL_CMD = 0x86
-SILIDER1_POSITION = 0xb0
-SILIDER2_POSITION = 0xb2
-PROX_STAT = 0xae
+    printed = 0 #global flag for status button change
 
-#/* Below are the Command Codes used to configure MBR3*/#
-
-CMD_NULL = 0x00
-SAVE_CHECK_CRC = 0x02
-CALC_CRC = 0x03
-LOAD_FACTORY = 0x04
-LOAD_PRIMARY = 0x05
-LOAD_SECONDARY = 0x06
-SLEEP = 0x07
-CLEAR_LATCHED_STATUS = 0x08
-CMD_RESET_PROX0_FILTER = 0x09
-CMD_RESET_PROX1_FILTER = 0x0A
-ENTER_CONFIG_MODE = 0x0B
-EXIT_CONTROL_RUN = 0xFE
-SW_RESET = 0xFF
-DEVICE_ID = 0X90
-
+    #/* Register Offsets/sub addresses */#  
+    REGMAP_ORIGIN = 0x00
+    CTRL_CMD = 0x86   
+    BTN_STAT = 0xAA
+    SILIDER1_POSITION = 0xb0
+    SILIDER2_POSITION = 0xb2
+    PROX_STAT = 0xae
+    #/* Below are the Command Codes used to configure MBR3*/#
+    SAVE_CHECK_CRC = 0x02
+    SW_RESET = 0xFF
+    DEVICE_ID = 0X90
 #/* Above are the Command Codes used to configure MBR3*/#
 # The below configuration array enables 2 slider, 1 proximity and 1 button 
 #   The INT HI enable                   
-configData = [
+    configData = [
     0xC3, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x7F, 0x7F,
     0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F,
@@ -61,10 +48,9 @@ configData = [
     0x2D, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
-]
+    ]
 
-class touch(object):
-    """ touch driver with interrupt """
+
     # Global Variables 
     TOUCH_NONE = 0
     TOUCH_BUTTON = 1
