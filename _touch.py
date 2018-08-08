@@ -199,11 +199,7 @@ class Touch(I2CDevice):
 if __name__ == "__main__":
     #global flag to stop the thread
     touch = Touch(1)
-    while 1:
-        try:
-            touch.readStatus()
-        except KeyboardInterrupt:
-            print('Received Keyboard Interrupt')
-            print(' Exiting the Program')     
-            sys.exit()
+    touch.readStatus()
+    while True:
+        time.sleep(0.1)
       
