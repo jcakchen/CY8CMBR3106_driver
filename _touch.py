@@ -85,6 +85,8 @@ class touch(object):
         self._init_MBR3()
         self.gpio_interrupt_on = False
         self.gpio_interrupt_number = 0
+        self.SP1_list = []
+        self.SP2_list = []
 
     def _sendConfiguration(self, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
@@ -149,15 +151,14 @@ class touch(object):
         while(retry):
             try:
                 self.slider1Position = self.read_uint8(SILIDER1_POSITION)
-                print('slider1Position %d' % slider1Position)
+                print('slider1Position %d' % self.slider1Position)
                 self.slider2Position = self.read_uint8(SILIDER2_POSITION)
-                print('slider2Position %d' % slider2Position)	
+                print('slider2Position %d' % self.slider2Position)	
                 self.buttonStat = self.read_uint8(BTN_STAT)
-                print('buttonStat %d ' % buttonStat)
+                print('buttonStat %d ' % self.buttonStat)
                 self.proxStat = self.read_uint8(PROX_STAT)
-                print('proxStat %d ' % proxStat)  
+                print('proxStat %d ' % self.proxStat)  
                 self.gpio_interrupt_on = True
-
                 retry = 0 
                 return True
             except:
@@ -176,19 +177,18 @@ class touch(object):
         So that other threads can use this button status and trigger activities    
         Call the callback whenever the gpio pin is interrupt.
         """
-        self.SP1_list = []
-        self.SP2_list = []
+        self.gpio_interrupt_on = False
         self.gpio_interrupt_number = 0
         self.gpio_pin_int.on_press(self._gpio_int_callback)  
         while True:
             if self.gpio_interrupt_on:
                 self.gpio_interrupt_on = False
                 if self.slider1Position < 255 or self.slider2Position < 255:
-                    if self.gpio_interrupt_number < 2                 
+                    if self.gpio_interrupt_number < 2:                 
                         if self.gpio_interrupt_number == 0:
                             if self.timer_on == False:
                                 # set 1 second for detecting is slider continuous operation or not
-                                timer = threading.Timer(1, _timer_callback)
+                                timer = threading.Timer(1, self._timer_callback)
                                 timer.start()  ####threads can only be started once 
                                 self.timer_on = True  
                         if self.timer_on:
