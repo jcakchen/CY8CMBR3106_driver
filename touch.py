@@ -271,15 +271,33 @@ def init_MBR3():
     time.sleep(0.5) 
     
     return
-
+def on_button_pressed():
+    retry = 1
+    while(retry):
+        try:
+            slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
+            print('slider1Position %d' % slider1Position)
+            slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
+            print('slider2Position %d' % slider2Position)	
+            buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
+            print('buttonStat %d ' % buttonStat)
+            proxStat = bus.read_byte_data(SLAVE_ADDR, PROX_STAT)
+            print('proxStat %d ' % proxStat)             
+            retry = 0   
+            return   
+        except:
+            retry = retry + 1
+            if(retry == 10):
+                print(' Failed 10 times to Read BUtton Status!!')  
 if __name__ == "__main__":
     #global flag to stop the thread
     
-    init_MBR3()
+    
     gpio_pin_int = Button(channel=GPIO_BUTTON)
-    touch = Touch()
-    gpio_pin_int.on_press(touch.gpio_int_callback) 
-    touch.readStatus()
+    #touch = Touch()
+    init_MBR3()
+    gpio_pin_int.on_press(on_button_pressed) 
+    #touch.readStatus()
     while True:
         time.sleep(0.2)
       
