@@ -63,8 +63,8 @@ class Touch(object):
                 ):
         self.task = threading.Thread(target=self.readStatus)
         self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
-        self.bus = smbus.SMBus(1)
         self.address = address
+        self.bus = smbus.SMBus(1)
         self.touch_state = None    
         self.buttonStat = None
         self.slider1Position = None
