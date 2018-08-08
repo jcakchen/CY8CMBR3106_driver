@@ -8,7 +8,7 @@ import time
 import smbus
 from i2c_device import I2CDevice
 from _button import Button
-
+import threading
 
 class touch(I2CDevice):
     """ touch driver with interrupt """
@@ -198,7 +198,7 @@ class touch(I2CDevice):
 
 if __name__ == "__main__":
     #global flag to stop the thread
-    touch = touch()
+    touch = touch(1)
     while 1:
         try:
             touch.readStatus()
