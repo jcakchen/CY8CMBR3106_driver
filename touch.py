@@ -46,7 +46,7 @@ configData = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
     ]
 
-class MBR3:
+class MBR3(object):
     """ touch driver with interrupt """
     # Global Variables 
     TOUCH_NONE = 0
@@ -121,7 +121,8 @@ class MBR3:
         return
 
 class Touch(MBR3):
-    def __init__(self):
+    def __init__(self,address):
+        super(Touch, self).__init__(address = MBR3_I2CADDR)
         self.task = threading.Thread(target=self.readStatus)
         self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
         self.touch_state = None    
@@ -213,7 +214,7 @@ class Touch(MBR3):
                 """
 
 if __name__ == "__main__":
-    touch = Touch(MBR3)
+    touch = Touch(1)
     touch.start()
     while True:
         time.sleep(0.2)
