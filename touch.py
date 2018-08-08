@@ -61,6 +61,7 @@ class Touch(object):
     def __init__(self,
                  address = MBR3_I2CADDR
                 ):
+        self.task = threading.Thread(target=self.readStatus)
         self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
         self.bus = smbus.SMBus(1)
         self.address = address
@@ -74,8 +75,10 @@ class Touch(object):
         self.gpio_interrupt_number = 0
         self.SP1_list = []
         self.SP2_list = []
+        
+    def start(self):
         self.init_MBR3()
-
+        self.task.start()
     def sendConfiguration(self, addr, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
         # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
@@ -208,8 +211,7 @@ class Touch(object):
 
 if __name__ == "__main__":
     touch = Touch()
-    #touch.init_MBR3()
-    touch.readStatus()
+    touch.start()
     while True:
         time.sleep(0.2)
       
