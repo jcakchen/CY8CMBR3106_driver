@@ -6,32 +6,28 @@
 import sys
 import time
 import smbus
+import threading
 from i2c_device import I2CDevice
 from _button import Button
-import threading
 
-class touch(I2CDevice):
-    """ touch driver with interrupt """
-    #/* Slave Address (Default) */
-    MBR3_I2CADDR = 0x37
 
-    printed = 0 #global flag for status button change
-
-    #/* Register Offsets/sub addresses */#  
-    REGMAP_ORIGIN = 0x00
-    CTRL_CMD = 0x86   
-    BTN_STAT = 0xAA
-    SILIDER1_POSITION = 0xb0
-    SILIDER2_POSITION = 0xb2
-    PROX_STAT = 0xae
-    #/* Below are the Command Codes used to configure MBR3*/#
-    SAVE_CHECK_CRC = 0x02
-    SW_RESET = 0xFF
-    DEVICE_ID = 0X90
+#/* Slave Address (Default) */
+MBR3_I2CADDR = 0x37
+#/* Register Offsets/sub addresses */#  
+REGMAP_ORIGIN = 0x00
+CTRL_CMD = 0x86   
+BTN_STAT = 0xAA
+SILIDER1_POSITION = 0xb0
+SILIDER2_POSITION = 0xb2
+PROX_STAT = 0xae
+#/* Below are the Command Codes used to configure MBR3*/#
+SAVE_CHECK_CRC = 0x02
+SW_RESET = 0xFF
+DEVICE_ID = 0X90
 #/* Above are the Command Codes used to configure MBR3*/#
 # The below configuration array enables 2 slider, 1 proximity and 1 button 
 #   The INT HI enable                   
-    configData = [
+configData = [
     0xC3, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x7F, 0x7F,
     0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F,
@@ -49,21 +45,23 @@ class touch(I2CDevice):
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
     ]
+# GPIO definitions (BCM)
+GPIO_BUTTON = 23
 
-
+class touch(I2CDevice):
+    """ touch driver with interrupt """
     # Global Variables 
     TOUCH_NONE = 0
     TOUCH_BUTTON = 1
     TOUCH_PROX = 2
     TOUCH_CW = 3
     TOUCH_CCW = 4
-    # GPIO definitions (BCM)
-    GPIO_BUTTON = 23
+
     def __init__(self,
                  address = MBR3_I2CADDR
                 ):
         self.touch_state = None
-        self.gpio_pin_int = Button(channel=self.GPIO_BUTTON,debounce_time=0.01)        
+        self.gpio_pin_int = Button(channel=GPIO_BUTTON,debounce_time=0.01)        
         self.buttonStat = None
         self.slider1Position = None
         self.slider2Position = None
@@ -99,7 +97,7 @@ class touch(I2CDevice):
         retry = 1
         while(retry):
             try:
-                self.write_int8(self.CTRL_CMD,self.SAVE_CHECK_CRC)
+                self.write_int8(CTRL_CMD,SAVE_CHECK_CRC)
                 retry = 0
                 print ('SAVE_CHECK_CRC command sent successfully!!' )
             except:
@@ -111,7 +109,7 @@ class touch(I2CDevice):
         retry = 1
         while(retry):
             try:
-                self.write_int8(self.CTRL_CMD,self.SW_RESET)
+                self.write_int8(CTRL_CMD,SW_RESET)
                 retry = 0
                 print ('SW_RESET command sent successfully!!' )
             except:
@@ -122,7 +120,7 @@ class touch(I2CDevice):
         return
 
     def _init_MBR3(self):
-        self._sendConfiguration(self.REGMAP_ORIGIN,128,self.configData)
+        self._sendConfiguration(REGMAP_ORIGIN,128,configData)
         print ('Configuration Sent Sucessfully!!')  
         # Provide this delay to allow the MBR device to save the 128 bytes   #
         # of configuration sent.                                             #
@@ -136,13 +134,13 @@ class touch(I2CDevice):
         retry = 1
         while(retry):
             try:
-                self.slider1Position = self.read_uint8(self.SILIDER1_POSITION)
+                self.slider1Position = self.read_uint8(SILIDER1_POSITION)
                 print('slider1Position %d' % self.slider1Position)
-                self.slider2Position = self.read_uint8(self.SILIDER2_POSITION)
+                self.slider2Position = self.read_uint8(SILIDER2_POSITION)
                 print('slider2Position %d' % self.slider2Position)	
-                self.buttonStat = self.read_uint8(self.BTN_STAT)
+                self.buttonStat = self.read_uint8(BTN_STAT)
                 print('buttonStat %d ' % self.buttonStat)
-                self.proxStat = self.read_uint8(self.PROX_STAT)
+                self.proxStat = self.read_uint8(PROX_STAT)
                 print('proxStat %d ' % self.proxStat)  
                 self.gpio_interrupt_on = True
                 retry = 0 
