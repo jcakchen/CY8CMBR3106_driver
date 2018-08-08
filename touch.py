@@ -46,7 +46,7 @@ configData = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
     ]
 
-class Touch(object):
+class MBR3:
     """ touch driver with interrupt """
     # Global Variables 
     TOUCH_NONE = 0
@@ -60,25 +60,9 @@ class Touch(object):
 
     def __init__(self,
                  address = MBR3_I2CADDR
-                ):
-        self.task = threading.Thread(target=self.readStatus)
-        self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
+                ): 
         self.address = address
-        self.bus = smbus.SMBus(1)
-        self.touch_state = None    
-        self.buttonStat = None
-        self.slider1Position = None
-        self.slider2Position = None
-        self.proxStat = None
-        self.gpio_interrupt_on = False
-        self.timer_on = False
-        self.gpio_interrupt_number = 0
-        self.SP1_list = []
-        self.SP2_list = []
-        
-    def start(self):
-        self.init_MBR3()
-        self.task.start()
+
     def sendConfiguration(self, addr, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
         # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
@@ -135,6 +119,25 @@ class Touch(object):
         #Delay after sending the Reset command to allow for MBR3 boot
         time.sleep(0.5) 
         return
+
+class Touch(MBR3):
+        def __init__(self):
+        self.task = threading.Thread(target=self.readStatus)
+        self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
+        self.touch_state = None    
+        self.buttonStat = None
+        self.slider1Position = None
+        self.slider2Position = None
+        self.proxStat = None
+        self.gpio_interrupt_on = False
+        self.timer_on = False
+        self.gpio_interrupt_number = 0
+        self.SP1_list = []
+        self.SP2_list = []
+
+    def start(self):
+        self.init_MBR3()
+        self.task.start()
 
     def gpio_int_callback(self): 
         print("_gpio_int_callback")
@@ -210,7 +213,7 @@ class Touch(object):
                 """
 
 if __name__ == "__main__":
-    touch = Touch()
+    touch = Touch(MBR3)
     touch.start()
     while True:
         time.sleep(0.2)
