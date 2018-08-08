@@ -183,7 +183,7 @@ class touch(object):
         while True:
             if self.gpio_interrupt_on:
                 self.gpio_interrupt_on = False
-                if self.slider1Position < 255 || self.slider2Position < 255:
+                if self.slider1Position < 255 or self.slider2Position < 255:
                     if self.gpio_interrupt_number < 2                 
                         if self.gpio_interrupt_number == 0:
                             if self.timer_on == False:
@@ -198,10 +198,10 @@ class touch(object):
                     else:
                         self.gpio_interrupt_number = 0
                         # Slide clockwise
-                        if SP1_list[2] > SP1_list[1] || SP2_list[2] > SP2_list[1]:
+                        if SP1_list[2] > SP1_list[1] or SP2_list[2] > SP2_list[1]:
                             self.touch_state =  TOUCH_CW
                         #slide anticlockwise
-                        elif SP1_list[2] < SP1_list[1] || SP2_list[2] < SP2_list[1]:
+                        elif SP1_list[2] < SP1_list[1] or SP2_list[2] < SP2_list[1]:
                             self.touch_state =  TOUCH_CCW
                 elif self.proxStat == 2:
                     self.touch_state =  TOUCH_PROX
