@@ -80,7 +80,6 @@ class Touch(object):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
         # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
         # method/function call                                                         #
-
         for i in range(offset,(offset+count),1):
             retry = 1
             while(retry):
@@ -206,10 +205,76 @@ class Touch(object):
                     self.state = self.TOUCH_NONE
                     print("TOUCH_NONE")
                 """
+
+def sendConfiguration(address, offset, count, data):
+    # This function sends the 128 bytes of configuration array to MBR3 device over #
+    # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
+    # method/function call                                                         #
+
+    for i in range(offset,(offset+count),1):
+        retry = 1
+        while(retry):
+            try:
+                #print i, data[i]
+                bus.write_byte_data(address,i,data[i])
+                retry = 0
+            except:
+                retry = retry + 1
+                time.sleep(0.05)
+                if(retry == 10):
+                    print('ERROR: Failed to Send Configuration 10 times!! \n')
+                    exit(0)
+
+def applyConfig():
+    # This function sends save& check CRC command, waits for some time to allow #
+    # MBR3 device to save the 128 bytes of configuration data and then issue a  #
+    # software reset to apply the new configuration                             #
+
+    retry = 1
+    while(retry):
+        try:
+            bus.write_byte_data(SLAVE_ADDR,CTRL_CMD,SAVE_CHECK_CRC)
+            retry = 0
+            print ('SAVE_CHECK_CRC command sent successfully!!' )
+        except:
+            retry = retry + 1
+            if(retry == 10):
+                print('ERROR: Failed to send COMMAMD SAVE_CHECK_CRC 10 times !!')
+                sys.exit(0)
+    time.sleep(0.05)
+    retry = 1
+    while(retry):
+        try:
+            bus.write_byte_data(SLAVE_ADDR,CTRL_CMD,SW_RESET)
+            retry = 0
+            print ('SW_RESET command sent successfully!!' )
+        except:
+            retry = retry + 1
+            if(retry == 10):
+                print('ERROR: Failed 10 times send COMMAMD SW_RESET!!')
+                sys.exit(0)
+    return
+def init_MBR3():
+    a = 0
+    delay = 0.05
+    sendConfiguration(SLAVE_ADDR, REGMAP_ORIGIN,128,configData)
+    print ('Configuration Sent Sucessfully!!')
+    
+    # Provide this delay to allow the MBR device to save the 128 bytes   #
+    # of configuration sent.                                             #
+    time.sleep(1)
+    
+    applyConfig()
+    
+    #Delay after sending the Reset command to allow for MBR3 boot
+    time.sleep(0.5) 
+    
+    return
+
 if __name__ == "__main__":
     #global flag to stop the thread
-    touch = Touch()
-    touch.init_MBR3()
+    #touch = Touch()
+    init_MBR3()
     gpio_pin_int = Button(channel=GPIO_BUTTON)
     gpio_pin_int.on_press(touch.gpio_int_callback) 
     touch.readStatus()
