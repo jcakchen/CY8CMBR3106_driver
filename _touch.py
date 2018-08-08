@@ -48,7 +48,7 @@ configData = [
 # GPIO definitions (BCM)
 GPIO_BUTTON = 23
 
-class touch(I2CDevice):
+class Touch(I2CDevice):
     """ touch driver with interrupt """
     # Global Variables 
     TOUCH_NONE = 0
@@ -60,6 +60,7 @@ class touch(I2CDevice):
     def __init__(self,bus_id,
                  address = MBR3_I2CADDR
                 ):
+        super(Touch, self).__init__(bus_id, address, little_endian=False)
         self.touch_state = None
         self.gpio_pin_int = Button(channel=GPIO_BUTTON,debounce_time=0.01)        
         self.buttonStat = None
@@ -196,7 +197,7 @@ class touch(I2CDevice):
 
 if __name__ == "__main__":
     #global flag to stop the thread
-    touch = touch(1)
+    touch = Touch(1)
     while 1:
         try:
             touch.readStatus()
