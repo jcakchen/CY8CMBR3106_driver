@@ -62,7 +62,7 @@ class Touch(I2CDevice):
                 ):
         super(Touch, self).__init__(bus_id, address, little_endian=False)
         self.touch_state = None
-        self.gpio_pin_int = Button(channel=GPIO_BUTTON,debounce_time=0.01)        
+        self.gpio_pin_int = Button(channel=GPIO_BUTTON)        
         self.buttonStat = None
         self.slider1Position = None
         self.slider2Position = None
