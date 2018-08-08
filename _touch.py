@@ -60,11 +60,10 @@ class Touch(object):
     def __init__(self,
                  address = MBR3_I2CADDR
                 ):
-        #super(Touch, self).__init__(bus_id, address, little_endian=False)
+        self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
         self.bus = smbus.SMBus(1)
         self.address = address
-        self.touch_state = None
-        self.gpio_pin_int = Button(channel=GPIO_BUTTON)        
+        self.touch_state = None    
         self.buttonStat = None
         self.slider1Position = None
         self.slider2Position = None
@@ -74,7 +73,7 @@ class Touch(object):
         self.gpio_interrupt_number = 0
         self.SP1_list = []
         self.SP2_list = []
-        self._init_MBR3()
+        #self._init_MBR3()
 
     def _sendConfiguration(self, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
@@ -123,7 +122,7 @@ class Touch(object):
                     sys.exit(0)
         return
 
-    def _init_MBR3(self):
+    def init_MBR3(self):
         self._sendConfiguration(REGMAP_ORIGIN,128,configData)
         print ('Configuration Sent Sucessfully!!')  
         # Provide this delay to allow the MBR device to save the 128 bytes   #
@@ -209,6 +208,7 @@ class Touch(object):
 if __name__ == "__main__":
     #global flag to stop the thread
     touch = Touch()
+    touch.init_MBR3()
     touch.readStatus()
     while True:
         time.sleep(0.1)
