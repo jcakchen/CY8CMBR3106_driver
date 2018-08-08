@@ -46,7 +46,7 @@ configData = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
     ]
 
-class Touch:
+class Touch(object):
     """ touch driver with interrupt """
     # Global Variables 
     TOUCH_NONE = 0
@@ -74,7 +74,7 @@ class Touch:
         self.gpio_interrupt_number = 0
         self.SP1_list = []
         self.SP2_list = []
-        self._init_MBR3()
+        self.init_MBR3()
 
     def sendConfiguration(self, addr, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
