@@ -57,7 +57,7 @@ class touch(I2CDevice):
     TOUCH_CW = 3
     TOUCH_CCW = 4
 
-    def __init__(self,bus_id
+    def __init__(self,bus_id,
                  address = MBR3_I2CADDR
                 ):
         self.touch_state = None
