@@ -4,7 +4,7 @@
 import logging
 import time
 
-from rpisensors.eeprom16 import Eeprom16
+from eeprom16 import Eeprom16
 
 
 # pylint: disable=C0103

@@ -3,7 +3,7 @@
 
 import logging
 
-from rpisensors.smbus_wrapper import SMBusWrapper
+from smbus_wrapper import SMBusWrapper
 
 
 class I2CDevice(object):
