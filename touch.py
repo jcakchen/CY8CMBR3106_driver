@@ -121,8 +121,8 @@ class MBR3(object):
         return
 
 class Touch(MBR3):
-    def __init__(self,address):
-        super(Touch, self).__init__(address = MBR3_I2CADDR)
+    def __init__(self,address= MBR3_I2CADDR):
+        super(Touch, self).__init__(address)
         self.task = threading.Thread(target=self.readStatus)
         self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
         self.touch_state = None    
