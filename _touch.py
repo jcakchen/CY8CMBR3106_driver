@@ -63,7 +63,7 @@ class touch(object):
                  address = MBR3_I2CADDR
                 ):
         self.touch_state = None
-        self.gpio_pin_int = Button(channel=GPIO_BUTTON,debounce_time=0.01)        
+        self.gpio_pin_int = Button(channel=23,debounce_time=0.01)        
         self.buttonStat = None
         self.slider1Position = None
         self.slider2Position = None
