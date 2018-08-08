@@ -24,10 +24,22 @@ PROX_STAT = 0xae
 SAVE_CHECK_CRC = 0x02
 SW_RESET = 0xFF
 DEVICE_ID = 0X90
-#/* Above are the Command Codes used to configure MBR3*/#
-# The below configuration array enables 2 slider, 1 proximity and 1 button 
-#   The INT HI enable                   
-configData = [
+
+# GPIO definitions (BCM)
+GPIO_BUTTON = 23
+
+class Touch(object):
+    """ touch driver with interrupt """
+    # Global Variables 
+    TOUCH_NONE = 0
+    TOUCH_BUTTON = 1
+    TOUCH_PROX = 2
+    TOUCH_CW = 3
+    TOUCH_CCW = 4
+    #/* Above are the Command Codes used to configure MBR3*/#
+    # The below configuration array enables 2 slider, 1 proximity and 1 button 
+    #   The INT HI enable                   
+    configData = [
     0xC3, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x7F, 0x7F,
     0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F,
@@ -44,19 +56,7 @@ configData = [
     0x2D, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
-]
-# GPIO definitions (BCM)
-GPIO_BUTTON = 23
-
-class Touch(object):
-    """ touch driver with interrupt """
-    # Global Variables 
-    TOUCH_NONE = 0
-    TOUCH_BUTTON = 1
-    TOUCH_PROX = 2
-    TOUCH_CW = 3
-    TOUCH_CCW = 4
-
+    ]
     def __init__(self,
                  address = MBR3_I2CADDR
                 ):
@@ -123,7 +123,7 @@ class Touch(object):
         return
 
     def init_MBR3(self):
-        self._sendConfiguration(REGMAP_ORIGIN,128,configData)
+        self._sendConfiguration(REGMAP_ORIGIN,128,self.configData)
         print ('Configuration Sent Sucessfully!!')  
         # Provide this delay to allow the MBR device to save the 128 bytes   #
         # of configuration sent.                                             #
