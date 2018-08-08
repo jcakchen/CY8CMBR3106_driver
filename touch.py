@@ -62,7 +62,7 @@ class MBR3(object):
                  address = MBR3_I2CADDR
                 ): 
         self.address = address
-
+        self.bus = smbus.SMBus(1)
     def sendConfiguration(self, addr, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
         # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
