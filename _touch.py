@@ -75,7 +75,7 @@ class Touch(object):
         self.SP2_list = []
         #self._init_MBR3()
 
-    def _sendConfiguration(self, offset, count, data):
+    def _sendConfiguration(self, addr, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
         # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
         # method/function call                                                         #
@@ -84,7 +84,7 @@ class Touch(object):
             retry = 1
             while(retry):
                 try:
-                    self.bus.write_byte_data(self.address,i,data[i])
+                    self.bus.write_byte_data(addr,i,data[i])
                     retry = 0
                 except:
                     retry = retry + 1
@@ -123,7 +123,7 @@ class Touch(object):
         return
 
     def init_MBR3(self):
-        self._sendConfiguration(REGMAP_ORIGIN,128,configData)
+        self._sendConfiguration(self.address,REGMAP_ORIGIN,128,configData)
         print ('Configuration Sent Sucessfully!!')  
         # Provide this delay to allow the MBR device to save the 128 bytes   #
         # of configuration sent.                                             #
