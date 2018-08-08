@@ -148,6 +148,7 @@ class Touch(object):
                 print('proxStat %d ' % self.proxStat)  
                 self.gpio_interrupt_on = True
                 retry = 0 
+                return
             except:
                 retry = retry + 1
                 if(retry == 10):
