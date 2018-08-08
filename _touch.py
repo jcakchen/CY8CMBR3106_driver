@@ -7,8 +7,7 @@ import sys
 import time
 import smbus
 import threading
-import logging
-from i2c_device import I2CDevice
+#from i2c_device import I2CDevice
 from _button import Button
 
 
@@ -49,7 +48,7 @@ configData = [
 # GPIO definitions (BCM)
 GPIO_BUTTON = 23
 
-class Touch(I2CDevice):
+class Touch(object):
     """ touch driver with interrupt """
     # Global Variables 
     TOUCH_NONE = 0
@@ -61,7 +60,9 @@ class Touch(I2CDevice):
     def __init__(self,bus_id,
                  address = MBR3_I2CADDR
                 ):
-        super(Touch, self).__init__(bus_id, address, little_endian=False)
+        #super(Touch, self).__init__(bus_id, address, little_endian=False)
+        self.bus = smbus.SMBus(1)
+        self.address = address
         self.touch_state = None
         self.gpio_pin_int = Button(channel=GPIO_BUTTON)        
         self.buttonStat = None
@@ -84,7 +85,7 @@ class Touch(I2CDevice):
             retry = 1
             while(retry):
                 try:
-                    self.write_int8(i,data[i])
+                    self.bus.write_byte_data(self.address,i,data[i])
                     retry = 0
                 except:
                     retry = retry + 1
@@ -100,7 +101,7 @@ class Touch(I2CDevice):
         retry = 1
         while(retry):
             try:
-                self.write_int8(CTRL_CMD,SAVE_CHECK_CRC)
+                self.bus.write_byte_data(self.address,CTRL_CMD,SAVE_CHECK_CRC)
                 retry = 0
                 print ('SAVE_CHECK_CRC command sent successfully!!' )
             except:
@@ -112,7 +113,7 @@ class Touch(I2CDevice):
         retry = 1
         while(retry):
             try:
-                self.write_int8(CTRL_CMD,SW_RESET)
+                self.bus.write_byte_data(self.address,CTRL_CMD,SW_RESET)
                 retry = 0
                 print ('SW_RESET command sent successfully!!' )
             except:
@@ -138,13 +139,13 @@ class Touch(I2CDevice):
         print("_gpio_int_callback")
         while(retry):
             try:
-                self.slider1Position = self.read_uint8(SILIDER1_POSITION)
+                self.slider1Position = self.bus.read_byte_data(self.address,SILIDER1_POSITION)
                 print('slider1Position %d' % self.slider1Position)
-                self.slider2Position = self.read_uint8(SILIDER2_POSITION)
+                self.slider2Position = self.bus.read_byte_data(self.address,SILIDER2_POSITION)
                 print('slider2Position %d' % self.slider2Position)	
-                self.buttonStat = self.read_uint8(BTN_STAT)
+                self.buttonStat = self.bus.read_byte_data(self.address,BTN_STAT)
                 print('buttonStat %d ' % self.buttonStat)
-                self.proxStat = self.read_uint8(PROX_STAT)
+                self.proxStat = self.bus.read_byte_data(self.address,PROX_STAT)
                 print('proxStat %d ' % self.proxStat)  
                 self.gpio_interrupt_on = True
                 retry = 0 
@@ -207,7 +208,7 @@ class Touch(I2CDevice):
 
 if __name__ == "__main__":
     #global flag to stop the thread
-    touch = Touch(1)
+    touch = Touch()
     touch.readStatus()
     while True:
         time.sleep(0.1)
