@@ -206,6 +206,7 @@ class Touch(object):
                     print("TOUCH_NONE")
                 """
 
+bus = smbus.SMBus(1)
 def sendConfiguration(address, offset, count, data):
     # This function sends the 128 bytes of configuration array to MBR3 device over #
     # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
@@ -233,7 +234,7 @@ def applyConfig():
     retry = 1
     while(retry):
         try:
-            bus.write_byte_data(SLAVE_ADDR,CTRL_CMD,SAVE_CHECK_CRC)
+            bus.write_byte_data(MBR3_I2CADDR,CTRL_CMD,SAVE_CHECK_CRC)
             retry = 0
             print ('SAVE_CHECK_CRC command sent successfully!!' )
         except:
@@ -245,7 +246,7 @@ def applyConfig():
     retry = 1
     while(retry):
         try:
-            bus.write_byte_data(SLAVE_ADDR,CTRL_CMD,SW_RESET)
+            bus.write_byte_data(MBR3_I2CADDR,CTRL_CMD,SW_RESET)
             retry = 0
             print ('SW_RESET command sent successfully!!' )
         except:
@@ -257,7 +258,7 @@ def applyConfig():
 def init_MBR3():
     a = 0
     delay = 0.05
-    sendConfiguration(SLAVE_ADDR, REGMAP_ORIGIN,128,configData)
+    sendConfiguration(MBR3_I2CADDR, REGMAP_ORIGIN,128,configData)
     print ('Configuration Sent Sucessfully!!')
     
     # Provide this delay to allow the MBR device to save the 128 bytes   #
@@ -273,9 +274,10 @@ def init_MBR3():
 
 if __name__ == "__main__":
     #global flag to stop the thread
-    #touch = Touch()
+    
     init_MBR3()
     gpio_pin_int = Button(channel=GPIO_BUTTON)
+    touch = Touch()
     gpio_pin_int.on_press(touch.gpio_int_callback) 
     touch.readStatus()
     while True:
