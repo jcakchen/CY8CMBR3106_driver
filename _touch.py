@@ -10,7 +10,7 @@ from i2c_device import I2CDevice
 from _button import Button
 
 
-class touch(object):
+class touch(I2CDevice):
     """ touch driver with interrupt """
     #/* Slave Address (Default) */
     MBR3_I2CADDR = 0x37
