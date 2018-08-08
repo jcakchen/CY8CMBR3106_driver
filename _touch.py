@@ -44,7 +44,7 @@ configData = [
     0x2D, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
-    ]
+]
 # GPIO definitions (BCM)
 GPIO_BUTTON = 23
 
@@ -68,6 +68,7 @@ class Touch(I2CDevice):
         self.slider2Position = None
         self.proxStat = None
         self.gpio_interrupt_on = False
+        self.timer_on = False
         self.gpio_interrupt_number = 0
         self.SP1_list = []
         self.SP2_list = []
