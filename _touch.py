@@ -165,6 +165,7 @@ class Touch(I2CDevice):
         self.gpio_interrupt_on = False
         self.gpio_interrupt_number = 0
         self.gpio_pin_int.on_press(self._gpio_int_callback)  
+        print("read status start")
         while True:
             if self.gpio_interrupt_on:
                 print("interrupt on ")
