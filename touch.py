@@ -5,8 +5,8 @@
 
 import sys
 import time
-import smbus
 import threading
+import smbus
 #from i2c_device import I2CDevice
 from _button import Button
 
@@ -46,7 +46,7 @@ configData = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
     ]
 
-class Touch(object):
+class Touch:
     """ touch driver with interrupt """
     # Global Variables 
     TOUCH_NONE = 0
@@ -61,7 +61,7 @@ class Touch(object):
     def __init__(self,
                  address = MBR3_I2CADDR
                 ):
-        #self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
+        self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
         self.bus = smbus.SMBus(1)
         self.address = address
         self.touch_state = None    
@@ -166,7 +166,7 @@ class Touch(object):
         """
         self.gpio_interrupt_on = False
         self.gpio_interrupt_number = 0
-         
+        self.gpio_pin_int.on_press(self.gpio_int_callback)  
         print("read status start")
         while True:
             if self.gpio_interrupt_on:
@@ -206,98 +206,11 @@ class Touch(object):
                     print("TOUCH_NONE")
                 """
 
-bus = smbus.SMBus(1)
-def sendConfiguration(address, offset, count, data):
-    # This function sends the 128 bytes of configuration array to MBR3 device over #
-    # I2C(1). The 128 bytes of data are sent using a byte wise i2c data transfer   #
-    # method/function call                                                         #
-
-    for i in range(offset,(offset+count),1):
-        retry = 1
-        while(retry):
-            try:
-                #print i, data[i]
-                bus.write_byte_data(address,i,data[i])
-                retry = 0
-            except:
-                retry = retry + 1
-                time.sleep(0.05)
-                if(retry == 10):
-                    print('ERROR: Failed to Send Configuration 10 times!! \n')
-                    exit(0)
-
-def applyConfig():
-    # This function sends save& check CRC command, waits for some time to allow #
-    # MBR3 device to save the 128 bytes of configuration data and then issue a  #
-    # software reset to apply the new configuration                             #
-
-    retry = 1
-    while(retry):
-        try:
-            bus.write_byte_data(MBR3_I2CADDR,CTRL_CMD,SAVE_CHECK_CRC)
-            retry = 0
-            print ('SAVE_CHECK_CRC command sent successfully!!' )
-        except:
-            retry = retry + 1
-            if(retry == 10):
-                print('ERROR: Failed to send COMMAMD SAVE_CHECK_CRC 10 times !!')
-                sys.exit(0)
-    time.sleep(0.05)
-    retry = 1
-    while(retry):
-        try:
-            bus.write_byte_data(MBR3_I2CADDR,CTRL_CMD,SW_RESET)
-            retry = 0
-            print ('SW_RESET command sent successfully!!' )
-        except:
-            retry = retry + 1
-            if(retry == 10):
-                print('ERROR: Failed 10 times send COMMAMD SW_RESET!!')
-                sys.exit(0)
-    return
-def init_MBR3():
-    a = 0
-    delay = 0.05
-    sendConfiguration(MBR3_I2CADDR, REGMAP_ORIGIN,128,configData)
-    print ('Configuration Sent Sucessfully!!')
-    
-    # Provide this delay to allow the MBR device to save the 128 bytes   #
-    # of configuration sent.                                             #
-    time.sleep(1)
-    
-    applyConfig()
-    
-    #Delay after sending the Reset command to allow for MBR3 boot
-    time.sleep(0.5) 
-    
-    return
-    
-def on_button_pressed():
-    retry = 1
-    while(retry):
-        try:
-            slider1Position = bus.read_byte_data(MBR3_I2CADDR, SILIDER1_POSITION)
-            print('slider1Position %d' % slider1Position)
-            slider2Position = bus.read_byte_data(MBR3_I2CADDR, SILIDER2_POSITION)
-            print('slider2Position %d' % slider2Position)	
-            buttonStat = bus.read_byte_data(MBR3_I2CADDR, BTN_STAT)
-            print('buttonStat %d ' % buttonStat)
-            proxStat = bus.read_byte_data(MBR3_I2CADDR, PROX_STAT)
-            print('proxStat %d ' % proxStat)             
-            retry = 0   
-            return   
-        except:
-            retry = retry + 1
-            if(retry == 10):
-                print(' Failed 10 times to Read BUtton Status!!')  
 
 if __name__ == "__main__":
-    #global flag to stop the thread
-    gpio_pin_int = Button(channel=GPIO_BUTTON)
-    #touch = Touch()
-    init_MBR3()
-    gpio_pin_int.on_press(on_button_pressed) 
-    #touch.readStatus()
+    touch = Touch()
+    touch.init_MBR3()
+    touch.readStatus()
     while True:
         time.sleep(0.2)
       
