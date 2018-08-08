@@ -133,6 +133,7 @@ class Touch(I2CDevice):
 
     def _gpio_int_callback(self):
         retry = 1
+        print("_gpio_int_callback")
         while(retry):
             try:
                 self.slider1Position = self.read_uint8(SILIDER1_POSITION)
