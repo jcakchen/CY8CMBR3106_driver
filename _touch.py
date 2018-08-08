@@ -133,9 +133,9 @@ class Touch(object):
         time.sleep(0.5) 
         return
 
-    def gpio_int_callback(self):
-        retry = 1
+    def gpio_int_callback(self): 
         print("_gpio_int_callback")
+        retry = 1
         while(retry):
             try:
                 self.slider1Position = self.bus.read_byte_data(self.address,SILIDER1_POSITION)
@@ -148,12 +148,10 @@ class Touch(object):
                 print('proxStat %d ' % self.proxStat)  
                 self.gpio_interrupt_on = True
                 retry = 0 
-                return True
             except:
                 retry = retry + 1
                 if(retry == 10):
                     print(' Failed 10 times to Read BUtton Status!!') 
-                    return  False  
 
     def _timer_callback(self):
         self.timer_on = False
@@ -173,6 +171,7 @@ class Touch(object):
             if self.gpio_interrupt_on:
                 print("interrupt on ")
                 self.gpio_interrupt_on = False
+                """
                 if self.slider1Position < 255 or self.slider2Position < 255:
                     if self.gpio_interrupt_number < 2:                 
                         if self.gpio_interrupt_number == 0:
@@ -204,7 +203,7 @@ class Touch(object):
                 else:
                     self.state = self.TOUCH_NONE
                     print("TOUCH_NONE")
-
+                """
 if __name__ == "__main__":
     #global flag to stop the thread
     touch = Touch()
