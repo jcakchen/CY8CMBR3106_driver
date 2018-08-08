@@ -11,35 +11,23 @@ import threading
 from _button import Button
 
 
-#/* Slave Address (Default) */
+# Slave Address (Default)
 MBR3_I2CADDR = 0x37
-#/* Register Offsets/sub addresses */#  
+# Register Offsets/sub addresses
 REGMAP_ORIGIN = 0x00
 CTRL_CMD = 0x86   
 BTN_STAT = 0xAA
 SILIDER1_POSITION = 0xb0
 SILIDER2_POSITION = 0xb2
 PROX_STAT = 0xae
-#/* Below are the Command Codes used to configure MBR3*/#
+# Below are the Command Codes used to configure MBR3
 SAVE_CHECK_CRC = 0x02
 SW_RESET = 0xFF
 DEVICE_ID = 0X90
 
 # GPIO definitions (BCM)
 GPIO_BUTTON = 23
-
-class Touch(object):
-    """ touch driver with interrupt """
-    # Global Variables 
-    TOUCH_NONE = 0
-    TOUCH_BUTTON = 1
-    TOUCH_PROX = 2
-    TOUCH_CW = 3
-    TOUCH_CCW = 4
-    #/* Above are the Command Codes used to configure MBR3*/#
-    # The below configuration array enables 2 slider, 1 proximity and 1 button 
-    #   The INT HI enable                   
-    configData = [
+configData = [
     0xC3, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x7F, 0x7F,
     0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F, 0x7F,
@@ -57,10 +45,22 @@ class Touch(object):
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
     ]
+class Touch(object):
+    """ touch driver with interrupt """
+    # Global Variables 
+    TOUCH_NONE = 0
+    TOUCH_BUTTON = 1
+    TOUCH_PROX = 2
+    TOUCH_CW = 3
+    TOUCH_CCW = 4
+    #/* Above are the Command Codes used to configure MBR3*/#
+    # The below configuration array enables 2 slider, 1 proximity and 1 button 
+    #   The INT HI enable                   
+
     def __init__(self,
                  address = MBR3_I2CADDR
                 ):
-        self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
+        #self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
         self.bus = smbus.SMBus(1)
         self.address = address
         self.touch_state = None    
@@ -123,7 +123,7 @@ class Touch(object):
         return
 
     def init_MBR3(self):
-        self._sendConfiguration(REGMAP_ORIGIN,128,self.configData)
+        self._sendConfiguration(REGMAP_ORIGIN,128,configData)
         print ('Configuration Sent Sucessfully!!')  
         # Provide this delay to allow the MBR device to save the 128 bytes   #
         # of configuration sent.                                             #
@@ -133,7 +133,7 @@ class Touch(object):
         time.sleep(0.5) 
         return
 
-    def _gpio_int_callback(self):
+    def gpio_int_callback(self):
         retry = 1
         print("_gpio_int_callback")
         while(retry):
@@ -167,7 +167,7 @@ class Touch(object):
         """
         self.gpio_interrupt_on = False
         self.gpio_interrupt_number = 0
-        self.gpio_pin_int.on_press(self._gpio_int_callback)  
+         
         print("read status start")
         while True:
             if self.gpio_interrupt_on:
@@ -209,6 +209,8 @@ if __name__ == "__main__":
     #global flag to stop the thread
     touch = Touch()
     touch.init_MBR3()
+    gpio_pin_int = Button(channel=GPIO_BUTTON)
+    gpio_pin_int.on_press(touch.gpio_int_callback) 
     touch.readStatus()
     while True:
         time.sleep(0.1)
