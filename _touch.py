@@ -57,7 +57,7 @@ class touch(I2CDevice):
     TOUCH_CW = 3
     TOUCH_CCW = 4
 
-    def __init__(self,
+    def __init__(self,bus_id
                  address = MBR3_I2CADDR
                 ):
         self.touch_state = None
@@ -66,11 +66,11 @@ class touch(I2CDevice):
         self.slider1Position = None
         self.slider2Position = None
         self.proxStat = None
-        self._init_MBR3()
         self.gpio_interrupt_on = False
         self.gpio_interrupt_number = 0
         self.SP1_list = []
         self.SP2_list = []
+        self._init_MBR3()
 
     def _sendConfiguration(self, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
