@@ -74,7 +74,7 @@ class Touch:
         self.gpio_interrupt_number = 0
         self.SP1_list = []
         self.SP2_list = []
-        #self._init_MBR3()
+        self._init_MBR3()
 
     def _sendConfiguration(self, addr, offset, count, data):
         # This function sends the 128 bytes of configuration array to MBR3 device over #
@@ -209,7 +209,7 @@ class Touch:
 
 if __name__ == "__main__":
     touch = Touch()
-    touch.init_MBR3()
+    #touch.init_MBR3()
     touch.readStatus()
     while True:
         time.sleep(0.2)
