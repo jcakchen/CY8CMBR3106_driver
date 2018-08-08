@@ -57,7 +57,7 @@ class Touch(object):
     TOUCH_CW = 3
     TOUCH_CCW = 4
 
-    def __init__(self,bus_id,
+    def __init__(self,
                  address = MBR3_I2CADDR
                 ):
         #super(Touch, self).__init__(bus_id, address, little_endian=False)
