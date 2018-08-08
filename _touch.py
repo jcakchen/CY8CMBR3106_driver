@@ -7,6 +7,7 @@ import sys
 import time
 import smbus
 import threading
+import logging
 from i2c_device import I2CDevice
 from _button import Button
 
@@ -189,15 +190,20 @@ class Touch(I2CDevice):
                         # Slide clockwise
                         if self.SP1_list[2] > self.SP1_list[1] or self.SP2_list[2] > self.SP2_list[1]:
                             self.touch_state =  self.TOUCH_CW
+                            print("TOUH_CW")
                         #slide anticlockwise
                         elif self.SP1_list[2] < self.SP1_list[1] or self.SP2_list[2] < self.SP2_list[1]:
                             self.touch_state =  self.TOUCH_CCW
+                            print("TOUCH_CCW")
                 elif self.proxStat == 2:
                     self.touch_state =  self.TOUCH_PROX
+                    print("TOUCH_PROX")
                 elif self.buttonStat == 2:
                     self.touch_state = self.TOUCH_BUTTON
+                    print("TOUCH_BUTTON")
                 else:
                     self.state = self.TOUCH_NONE
+                    print("TOUCH_NONE")
 
 if __name__ == "__main__":
     #global flag to stop the thread
