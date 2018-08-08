@@ -45,6 +45,7 @@ configData = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x66, 0x6E
     ]
+
 class Touch(object):
     """ touch driver with interrupt """
     # Global Variables 
@@ -213,5 +214,5 @@ if __name__ == "__main__":
     gpio_pin_int.on_press(touch.gpio_int_callback) 
     touch.readStatus()
     while True:
-        time.sleep(0.1)
+        time.sleep(0.2)
       
