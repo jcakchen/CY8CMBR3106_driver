@@ -122,18 +122,18 @@ class MBR3:
 
 class Touch(MBR3):
         def __init__(self):
-        self.task = threading.Thread(target=self.readStatus)
-        self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
-        self.touch_state = None    
-        self.buttonStat = None
-        self.slider1Position = None
-        self.slider2Position = None
-        self.proxStat = None
-        self.gpio_interrupt_on = False
-        self.timer_on = False
-        self.gpio_interrupt_number = 0
-        self.SP1_list = []
-        self.SP2_list = []
+            self.task = threading.Thread(target=self.readStatus)
+            self.gpio_pin_int = Button(channel=GPIO_BUTTON)  
+            self.touch_state = None    
+            self.buttonStat = None
+            self.slider1Position = None
+            self.slider2Position = None
+            self.proxStat = None
+            self.gpio_interrupt_on = False
+            self.timer_on = False
+            self.gpio_interrupt_number = 0
+            self.SP1_list = []
+            self.SP2_list = []
 
     def start(self):
         self.init_MBR3()
