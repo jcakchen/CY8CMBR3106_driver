@@ -63,7 +63,7 @@ class touch(object):
                  address = MBR3_I2CADDR
                 ):
         self.touch_state = None
-        self.gpio_pin_int = Button(channel=23,debounce_time=0.01)        
+        self.gpio_pin_int = Button(channel=self.GPIO_BUTTON,debounce_time=0.01)        
         self.buttonStat = None
         self.slider1Position = None
         self.slider2Position = None
@@ -99,7 +99,7 @@ class touch(object):
         retry = 1
         while(retry):
             try:
-                self.write_int8(CTRL_CMD,SAVE_CHECK_CRC)
+                self.write_int8(self.CTRL_CMD,self.SAVE_CHECK_CRC)
                 retry = 0
                 print ('SAVE_CHECK_CRC command sent successfully!!' )
             except:
@@ -111,7 +111,7 @@ class touch(object):
         retry = 1
         while(retry):
             try:
-                self.write_int8(CTRL_CMD,SW_RESET)
+                self.write_int8(self.CTRL_CMD,self.SW_RESET)
                 retry = 0
                 print ('SW_RESET command sent successfully!!' )
             except:
@@ -122,7 +122,7 @@ class touch(object):
         return
 
     def _init_MBR3(self):
-        self._sendConfiguration(REGMAP_ORIGIN,128,configData)
+        self._sendConfiguration(self.REGMAP_ORIGIN,128,self.configData)
         print ('Configuration Sent Sucessfully!!')  
         # Provide this delay to allow the MBR device to save the 128 bytes   #
         # of configuration sent.                                             #
@@ -136,13 +136,13 @@ class touch(object):
         retry = 1
         while(retry):
             try:
-                self.slider1Position = self.read_uint8(SILIDER1_POSITION)
+                self.slider1Position = self.read_uint8(self.SILIDER1_POSITION)
                 print('slider1Position %d' % self.slider1Position)
-                self.slider2Position = self.read_uint8(SILIDER2_POSITION)
+                self.slider2Position = self.read_uint8(self.SILIDER2_POSITION)
                 print('slider2Position %d' % self.slider2Position)	
-                self.buttonStat = self.read_uint8(BTN_STAT)
+                self.buttonStat = self.read_uint8(self.BTN_STAT)
                 print('buttonStat %d ' % self.buttonStat)
-                self.proxStat = self.read_uint8(PROX_STAT)
+                self.proxStat = self.read_uint8(self.PROX_STAT)
                 print('proxStat %d ' % self.proxStat)  
                 self.gpio_interrupt_on = True
                 retry = 0 
@@ -184,21 +184,20 @@ class touch(object):
                     else:
                         self.gpio_interrupt_number = 0
                         # Slide clockwise
-                        if SP1_list[2] > SP1_list[1] or SP2_list[2] > SP2_list[1]:
-                            self.touch_state =  TOUCH_CW
+                        if self.SP1_list[2] > self.SP1_list[1] or self.SP2_list[2] > self.SP2_list[1]:
+                            self.touch_state =  self.TOUCH_CW
                         #slide anticlockwise
-                        elif SP1_list[2] < SP1_list[1] or SP2_list[2] < SP2_list[1]:
-                            self.touch_state =  TOUCH_CCW
+                        elif self.SP1_list[2] < self.SP1_list[1] or self.SP2_list[2] < self.SP2_list[1]:
+                            self.touch_state =  self.TOUCH_CCW
                 elif self.proxStat == 2:
-                    self.touch_state =  TOUCH_PROX
+                    self.touch_state =  self.TOUCH_PROX
                 elif self.buttonStat == 2:
-                    self.touch_state = TOUCH_BUTTON
+                    self.touch_state = self.TOUCH_BUTTON
                 else:
-                    self.state = TOUCH_NONE
+                    self.state = self.TOUCH_NONE
 
 if __name__ == "__main__":
     #global flag to stop the thread
-    stop = 0 
     touch = touch()
     while 1:
         try:
