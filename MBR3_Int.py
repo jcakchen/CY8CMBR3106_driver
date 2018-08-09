@@ -6,6 +6,7 @@
 import sys
 import time
 import smbus
+import threading
 from _button import Button
 
 # GPIO definitions (BCM)
@@ -28,6 +29,11 @@ global SP1_list
 global SP2_list
 global touch_state
 
+TOUCH_NONE = 0
+TOUCH_BUTTON = 1
+TOUCH_PROX = 2
+TOUCH_CW = 3
+TOUCH_CCW = 4
 #/* Register Offsets/sub addresses */#  
 REGMAP_ORIGIN = 0x00
 BTN_STAT = 0xAA
@@ -254,6 +260,7 @@ if __name__ == "__main__":
     proxStat = 0
     SP1_list = []
     SP2_list = []
+    timer_on = False
     gpio_interrupt_on = False
     gpio_interrupt_number = 0
     gpio_pin_int = Button(channel=GPIO_BUTTON)
