@@ -119,6 +119,21 @@ class MBR3(object):
         #Delay after sending the Reset command to allow for MBR3 boot
         time.sleep(0.5) 
         return
+    def readRegStatus(self,regAddr):
+        regStatus = 0
+        retry = 1
+        while(retry):
+            try:
+                regStatus = self.bus.read_byte_data(self.address,regAddr)
+                print('regStatus %d' % regStatus)
+                retry = 0 
+                return regStatus
+            except:
+                retry = retry + 1
+                if(retry == 10):
+                    print(' Failed 10 times to Read  Status!!')
+                    sys.exit(0)
+
 
 class Touch(MBR3):
     def __init__(self,address= MBR3_I2CADDR):
@@ -145,13 +160,13 @@ class Touch(MBR3):
         retry = 1
         while(retry):
             try:
-                self.slider1Position = self.bus.read_byte_data(self.address,SILIDER1_POSITION)
+                self.slider1Position = self.readRegStatus(SILIDER1_POSITION)
                 print('slider1Position %d' % self.slider1Position)
-                self.slider2Position = self.bus.read_byte_data(self.address,SILIDER2_POSITION)
+                self.slider2Position = self.readRegStatus(SILIDER2_POSITION)
                 print('slider2Position %d' % self.slider2Position)	
-                self.buttonStat = self.bus.read_byte_data(self.address,BTN_STAT)
+                self.buttonStat = self.readRegStatus(BTN_STAT)
                 print('buttonStat %d ' % self.buttonStat)
-                self.proxStat = self.bus.read_byte_data(self.address,PROX_STAT)
+                self.proxStat = self.readRegStatus(PROX_STAT)
                 print('proxStat %d ' % self.proxStat)  
                 self.gpio_interrupt_on = True
                 retry = 0 
