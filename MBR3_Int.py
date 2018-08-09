@@ -192,9 +192,9 @@ def readStatus():
     gpio_pin_int.on_press(gpio_int_callback)  
     print("read status start")
     while True:
-            if gpio_interrupt_on:
-                print("interrupt on ")
-                gpio_interrupt_on = False
+        if gpio_interrupt_on:
+            print("interrupt on ")
+            gpio_interrupt_on = False
                 """
                 if slider1Position < 255 or slider2Position < 255:
                                     
@@ -237,35 +237,36 @@ def readStatus():
 
 if __name__ == "__main__":
     global stop
+    global gpio_interrupt_on
+    global gpio_interrupt_number
     global slider1Position
     global slider2Position
     global buttonStat
     global proxStat
+    global timer_on
+    global SP1_list
+    global SP2_list
+    global touch_state
 
     buttonStat = 0
     slider1Position = 0
     slider2Position = 0
     proxStat = 0
-    
+    SP1_list = []
+    SP2_list = []
+    gpio_interrupt_on = False
+    gpio_interrupt_number = 0
+    gpio_pin_int = Button(channel=GPIO_BUTTON)
+    gpio_pin_int.on_press(gpio_int_callback)     
     #global flag to stop the thread
     stop = 0 
     init_MBR3()
     while 1:
         retry = 1
-        readStatus()
-        #time.sleep(0.2) 
-        while(retry):
-            try:           
-                retry = 0
-   
-            except KeyboardInterrupt:
-                print('Received Keyboard Interrupt')
-                print(' Exiting the Program')
-                stop = 1       
-            except:
-                retry = retry + 1
-                if(retry == 10):
-                    print(' Failed 10 times to Read BUtton Status!!')
-                    sys.exit()
+        if gpio_interrupt_on:
+            print("interrupt on ")
+            gpio_interrupt_on = False
+        #readStatus()
+        time.sleep(0.2) 
       
       
