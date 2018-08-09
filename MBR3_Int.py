@@ -195,7 +195,7 @@ def readStatus():
         if gpio_interrupt_on:
             print("interrupt on ")
             gpio_interrupt_on = False
-                """
+            """
                 if slider1Position < 255 or slider2Position < 255:
                                     
                     if gpio_interrupt_number == 0:
@@ -232,7 +232,7 @@ def readStatus():
                 else:
                     touch_state = TOUCH_NONE
                     print("TOUCH_NONE")
-            """ 
+        """ 
 
 
 if __name__ == "__main__":
