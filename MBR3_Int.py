@@ -10,7 +10,6 @@ from _button import Button
 
 # GPIO definitions (BCM)
 GPIO_BUTTON = 23
-gpio_button_int = Button(channel=GPIO_BUTTON)
 
 bus = smbus.SMBus(1)
 #/* Slave Address (Default) */
@@ -129,41 +128,7 @@ def applyConfig():
                 print('ERROR: Failed 10 times send COMMAMD SW_RESET!!')
                 sys.exit(0)
     return
-
-
-def readStatus():
-    # This thread will run parallely and updates the gloab variable "buttonStat" #
-    # So that other threads can use this button status and trigger activities    #
-    global buttonStat
-    global slider1Position
-    global slider2Position
-    global proxStat
-    global stop
-    while 1:
-        retry = 1
-        while(retry):
-            try:
-                slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-                slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
-                buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-                proxStat = bus.read_byte_data(SLAVE_ADDR, PROX_STAT)
-                #print(buttonStat)
-                retry = 0
-   
-            except KeyboardInterrupt:
-                print('Received Keyboard Interrupt')
-                print(' Exiting the Program')
-                stop = 1
-                return(0)
-         
-            except:
-                retry = retry + 1
-                if(retry == 10):
-                    print(' Failed 10 times to Read BUtton Status!!')
-                    sys.exit()
-
-            
-         
+  
 def init_MBR3():
     a = 0
     delay = 0.05
@@ -173,28 +138,11 @@ def init_MBR3():
     # Provide this delay to allow the MBR device to save the 128 bytes   #
     # of configuration sent.                                             #
     time.sleep(1)
-    
     applyConfig()
-    
     #Delay after sending the Reset command to allow for MBR3 boot
     time.sleep(0.5) 
-    
     return
 
-
-def displayButtonStat():
-    try:
-        if( slider1Position <255):
-            print(' slider1 is TOUCHED \n' )
-
-        if( slider2Position <255):
-            print(' slider2 is TOUCHED \n' )      
-       
-    except KeyboardInterrupt:
-        print('Received Keyboard Interrupt')
-        print('Exiting th Program')
-        stop = 1
-    return
 
 def gpio_int_callback():
     global gpio_interrupt_on
@@ -240,6 +188,7 @@ def readStatus():
     SP2_list = []
     gpio_interrupt_on = False
     gpio_interrupt_number = 0
+    gpio_pin_int = Button(channel=GPIO_BUTTON)
     gpio_pin_int.on_press(gpio_int_callback)  
     print("read status start")
     while True:
@@ -300,7 +249,6 @@ if __name__ == "__main__":
     
     #global flag to stop the thread
     stop = 0 
-    gpio_button_int.on_press(gpio_int_callback)  
     init_MBR3()
     while 1:
         retry = 1
