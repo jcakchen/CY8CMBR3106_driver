@@ -282,12 +282,12 @@ if __name__ == "__main__":
                             timer_on = True  
                     if timer_on:
                         if gpio_interrupt_number == 0:     
-                            SP1_list[0] = slider1Position
-                            SP2_list[0] = slider2Position
+                            SP1_list.insert(0, slider1Position)
+                            SP2_list.insert(0, slider2Position)
                             gpio_interrupt_number = gpio_interrupt_number + 1   
                         elif gpio_interrupt_number == 1:     
-                            SP1_list[1] = slider1Position
-                            SP2_list[1] = slider2Position
+                            SP1_list.insert(1, slider1Position)
+                            SP2_list.insert(1, slider2Position)
                             gpio_interrupt_number = gpio_interrupt_number + 1                          
                         else:
                             gpio_interrupt_number = 0
