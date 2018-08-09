@@ -27,6 +27,8 @@ global gpio_interrupt_number
 global timer_on
 global SP1_list = []
 global SP2_list = []
+global touch_state
+
 #/* Register Offsets/sub addresses */#  
 REGMAP_ORIGIN = 0x00
 BTN_STAT = 0xAA
@@ -230,9 +232,12 @@ def readStatus():
     global buttonStat
     global proxStat
     global timer_on
-    global SP1_list = []
-    global SP2_list = []
+    global SP1_list
+    global SP2_list
+    global touch_state
 
+    SP1_list = []
+    SP2_list = []
     gpio_interrupt_on = False
     gpio_interrupt_number = 0
     gpio_pin_int.on_press(gpio_int_callback)  
