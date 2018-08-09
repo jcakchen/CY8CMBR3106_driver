@@ -25,8 +25,8 @@ global proxStat
 global gpio_interrupt_on
 global gpio_interrupt_number
 global timer_on
-global SP1_list = []
-global SP2_list = []
+global SP1_list
+global SP2_list
 global touch_state
 
 #/* Register Offsets/sub addresses */#  
