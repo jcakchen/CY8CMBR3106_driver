@@ -157,13 +157,13 @@ def gpio_int_callback():
     while(retry):
         try:
             slider1Position = bus.read_byte_data(SLAVE_ADDR, SILIDER1_POSITION)
-            print('slider1Position %d' % slider1Position)
+            #print('slider1Position %d' % slider1Position)
             slider2Position = bus.read_byte_data(SLAVE_ADDR, SILIDER2_POSITION)
-            print('slider2Position %d' % slider2Position)	
+            #print('slider2Position %d' % slider2Position)	
             buttonStat = bus.read_byte_data(SLAVE_ADDR, BTN_STAT)
-            print('buttonStat %d ' % buttonStat)
+            #print('buttonStat %d ' % buttonStat)
             proxStat = bus.read_byte_data(SLAVE_ADDR, PROX_STAT)
-            print('proxStat %d ' % proxStat)  
+            #print('proxStat %d ' % proxStat)  
             gpio_interrupt_on = True           
             retry = 0   
             return   
@@ -177,6 +177,7 @@ def _timer_callback():
     global gpio_interrupt_number
     timer_on = False
     gpio_interrupt_number = 0
+    print("_timer_callback")
 
 def readStatus():
     global gpio_interrupt_on
@@ -274,22 +275,25 @@ if __name__ == "__main__":
             print("interrupt on ")
             gpio_interrupt_on = False
             if slider1Position < 255 or slider2Position < 255:                      
-                    if gpio_interrupt_number == 0:
-                        if timer_on == False:
-                            # set 1 second for detecting is slider continuous operation or not
-                            timer = threading.Timer(1, _timer_callback)
-                            timer.start()  ####threads can only be started once 
-                            timer_on = True  
+                    if gpio_interrupt_number == 0 and timer_on == False:
+                        # set 1 second for detecting is slider continuous operation or not
+                        timer = threading.Timer(1, _timer_callback)
+                        timer.start()  ####threads can only be started once 
+                        timer_on = True
+                        print("timer start") 
                     if timer_on:
                         if gpio_interrupt_number == 0:     
                             SP1_list.insert(0, slider1Position)
                             SP2_list.insert(0, slider2Position)
-                            gpio_interrupt_number = gpio_interrupt_number + 1   
+                            gpio_interrupt_number = gpio_interrupt_number + 1 
+                            print("gpio_interrupt_number= 0")  
                         elif gpio_interrupt_number == 1:     
                             SP1_list.insert(1, slider1Position)
                             SP2_list.insert(1, slider2Position)
-                            gpio_interrupt_number = gpio_interrupt_number + 1                          
+                            gpio_interrupt_number = gpio_interrupt_number + 1 
+                            print("gpio_interrupt_number= 1")                           
                         else:
+                            print("gpio_interrupt_number>1")  
                             gpio_interrupt_number = 0
                             # Slide clockwise
                             if SP1_list[1] > SP1_list[0] or SP2_list[1] > SP2_list[0]:
