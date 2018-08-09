@@ -303,10 +303,10 @@ if __name__ == "__main__":
                             elif SP1_list[1] < SP1_list[0] or SP2_list[1] < SP2_list[0]:
                                 touch_state =  TOUCH_CCW
                                 print("TOUCH_CCW")
-            elif proxStat == 2:
+            if proxStat == 2:
                 touch_state =  TOUCH_PROX
                 print("TOUCH_PROX")
-            elif buttonStat == 2:
+            if buttonStat == 2:
                 touch_state = TOUCH_BUTTON
                 print("TOUCH_BUTTON")
             else:
