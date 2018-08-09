@@ -266,6 +266,41 @@ if __name__ == "__main__":
         if gpio_interrupt_on:
             print("interrupt on ")
             gpio_interrupt_on = False
+            if slider1Position < 255 or slider2Position < 255:                      
+                    if gpio_interrupt_number == 0:
+                        if timer_on == False:
+                            # set 1 second for detecting is slider continuous operation or not
+                            timer = threading.Timer(1, _timer_callback)
+                            timer.start()  ####threads can only be started once 
+                            timer_on = True  
+                    if timer_on:
+                        if gpio_interrupt_number == 0:     
+                            SP1_list[0] = slider1Position
+                            SP2_list[0] = slider2Position
+                            gpio_interrupt_number = gpio_interrupt_number + 1   
+                        elif gpio_interrupt_number == 1:     
+                            SP1_list[1] = slider1Position
+                            SP2_list[1] = slider2Position
+                            gpio_interrupt_number = gpio_interrupt_number + 1                          
+                        else:
+                            gpio_interrupt_number = 0
+                            # Slide clockwise
+                            if SP1_list[1] > SP1_list[0] or SP2_list[1] > SP2_list[0]:
+                                touch_state =  TOUCH_CW
+                                print("TOUH_CW")
+                            #slide anticlockwise
+                            elif SP1_list[1] < SP1_list[0] or SP2_list[1] < SP2_list[0]:
+                                touch_state =  TOUCH_CCW
+                                print("TOUCH_CCW")
+            elif proxStat == 2:
+                touch_state =  TOUCH_PROX
+                print("TOUCH_PROX")
+            elif buttonStat == 2:
+                touch_state = TOUCH_BUTTON
+                print("TOUCH_BUTTON")
+            else:
+                touch_state = TOUCH_NONE
+                print("TOUCH_NONE")
         #readStatus()
         time.sleep(0.2) 
       
